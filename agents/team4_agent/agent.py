@@ -18,6 +18,7 @@ preflop_pipeline_agent = SequentialAgent(
     description="プリフロップフェーズを分析し、行動を決定するエージェント",
     sub_agents=[parallel_preflop_agent, preflop_action_agent],
 )
+
 parallel_flop_agent = ParallelAgent(
     name="parallel_flop_agent",
     description="フロップフェーズの手札と相手を並行に分析するエージェント",
@@ -41,19 +42,6 @@ turn_pipeline_agent = SequentialAgent(
     description="ターンフェーズを分析し、行動を決定するエージェント",
     sub_agents=[parallel_turn_agent, turn_action_agent],
 )
-
-parallel_flop_agent = ParallelAgent(
-    name="parallel_flop_agent",
-    description="フロップフェーズの手札と相手を並行に分析するエージェント",
-    sub_agents=[flop_agent, flop_exploit_agent],
-)
-
-flop_pipeline_agent = SequentialAgent(
-    name="flop_pipeline_agent",
-    description="フロップフェーズを分析し、行動を決定するエージェント",
-    sub_agents=[parallel_flop_agent, flop_action_agent],
-)
-
 
 parallel_river_agent = ParallelAgent(
     name="parallel_river_agent",
