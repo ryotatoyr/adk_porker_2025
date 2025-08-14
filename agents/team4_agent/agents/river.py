@@ -4,6 +4,7 @@ from ..tools.river import river
 
 river_agent = Agent(
     name="river_agent",
+    model="gemini-2.5-flash-lite",
     description="リバーフェーズに特化したエージェント",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 

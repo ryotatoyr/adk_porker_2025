@@ -4,6 +4,7 @@ from ..tools.preflop import preflop
 
 preflop_agent = Agent(
     name="preflop_agent",
+    model="gemini-2.5-flash-lite",
     description="プリフロップフェーズに特化したエージェント",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
