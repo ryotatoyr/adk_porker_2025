@@ -1,5 +1,5 @@
-RANK_ORDER = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
 from .starting_hand_dataset import STARTING_HAND_DATASET
+RANK_ORDER = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
 
 
 def preflop(your_cards: list[str], players: list[dict]) -> float:

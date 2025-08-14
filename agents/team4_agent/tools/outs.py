@@ -1,6 +1,6 @@
-from .poker.game_models import Card, Suit
-from .poker.evaluator import HandEvaluator, HandRank
 from .card import parse_cards
+from .poker.evaluator import HandEvaluator, HandRank
+from .poker.game_models import Card, Suit
 
 PROBABILITY = [[0.0, 2.2, 4.3, 6.5, 8.7, 10.9, 13.0, 15.2, 17.4, 19.6, 21.7,
                 23.9, 26.1, 28.3, 30.4, 32.6, 34.8, 37.0, 39.1, 41.3, 43.5],

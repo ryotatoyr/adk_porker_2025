@@ -2,10 +2,10 @@ from google.adk.agents import Agent, ParallelAgent, SequentialAgent
 
 from .agents.action import *
 from .agents.exploit import *
-
 from .agents.flop import flop_agent
 from .agents.preflop import preflop_agent
 from .agents.river import river_agent
+from .agents.turn import turn_agent
 
 parallel_preflop_agent = ParallelAgent(
     name="parallel_preflop_agent",
@@ -31,6 +31,17 @@ flop_pipeline_agent = SequentialAgent(
     sub_agents=[parallel_flop_agent, flop_action_agent],
 )
 
+parallel_turn_agent = ParallelAgent(
+    name="parallel_turn_agent",
+    description="ターンフェーズの手札と相手を並行に分析するエージェント",
+    sub_agents=[turn_agent, turn_exploit_agent],
+)
+
+turn_pipeline_agent = SequentialAgent(
+    name="turn_pipeline_agent",
+    description="ターンフェーズを分析し、行動を決定するエージェント",
+    sub_agents=[parallel_turn_agent, turn_action_agent],
+)
 
 parallel_river_agent = ParallelAgent(
     name="parallel_river_agent",
@@ -79,7 +90,7 @@ phaseに応じて、以下のエージェントを呼び出して情報を与え
     sub_agents=[
         preflop_pipeline_agent,
         flop_pipeline_agent,
-        # turn_pipeline_agent,
+        turn_pipeline_agent,
         river_pipeline_agent,
     ],
 )
