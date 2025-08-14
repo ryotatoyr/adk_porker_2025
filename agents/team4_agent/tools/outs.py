@@ -1,7 +1,5 @@
-from operator import ne
-from poker.game_models import Card, Suit
-from poker.evaluator import HandEvaluator, HandResult, HandRank
-from typing import List, Tuple, Set
+from .poker.game_models import Card, Suit
+from .poker.evaluator import HandEvaluator, HandRank
 from .card import parse_cards
 
 PROBABILITY = [[0.0, 2.2, 4.3, 6.5, 8.7, 10.9, 13.0, 15.2, 17.4, 19.6, 21.7,
@@ -10,31 +8,36 @@ PROBABILITY = [[0.0, 2.2, 4.3, 6.5, 8.7, 10.9, 13.0, 15.2, 17.4, 19.6, 21.7,
                 41.7, 45.0, 48.1, 51.2, 54.1, 57.0, 59.8, 62.4, 65.0, 67.5]]
 
 
-def get_probability(outs: int, draw: int) -> float:
+def get_outs_info(hands: list[str], community: list[str]) -> dict:
     """
-    outs数と残り枚数からそれを引く確率を求める。
-    Args:
-        outs (int): outs数
-        draw (int): 残り枚数
-    Return:
-        それを引く確率
-    """
-    return PROBABILITY[draw-1][outs]
-
-
-def get_outs(hands: list[str], community: list[str]) -> dict:
-    """
-    現在の状況から好転するouts数を数える。
+    現在の役よりも強い役について、outsの情報を求める。
+    現在の役よりも弱い役についての情報は出力されない。
     Args:
         hands (list[str]): 自身のカード (2枚)
         community (list[str]): 場のカード (3, 4枚)
     Return:
-        現在よりも強い役にそれぞれ対するouts数の辞書
+        現在よりも強い役にそれぞれ対するoutsの情報についての辞書
+        以下の形式で出力される。
+        {
+        役の名前: {
+            "cards": [outsとなるカードのリスト],
+            "outs": outs数,
+            "probability": 残りのドローでそれを引く確率 (%表記),
+            }
+        }
     """
-
     calc = CalcOuts(hands, community)
     outs_by_rank = calc.get_outs_by_rank()
-    outs_by_rank = {rank: len(outs) for rank, outs in outs_by_rank}
+
+    result = dict()
+    for rank, outs in outs_by_rank.items():
+        result[rank.name] = {
+            "card": [str(card) for card in outs],
+            "outs": len(outs),
+            "probability": PROBABILITY[6-len(calc.all_cards)][len(outs)]
+        }
+
+    return result
 
 
 class CalcOuts:
@@ -64,18 +67,16 @@ class CalcOuts:
 
     def get_outs_by_rank(self):
         outs_by_rank: dict[HandRank, set[Card]] = dict()
-        for hand_rank in HandRank:
+        for hand_rank in reversed(HandRank):
             if hand_rank.value <= self.result.rank.value:
                 continue
             match hand_rank:
                 case HandRank.ROYAL_FLUSH:
                     outs_by_rank[hand_rank] = self.get_royal_flush_outs()
                 case HandRank.STRAIGHT_FLUSH:
-                    outs_by_rank[hand_rank] = self.get_straight_flush_outs(
-                    )
+                    outs_by_rank[hand_rank] = self.get_straight_flush_outs()
                 case HandRank.FOUR_OF_A_KIND:
-                    outs_by_rank[hand_rank] = self.get_four_of_a_kind_outs(
-                    )
+                    outs_by_rank[hand_rank] = self.get_four_of_a_kind_outs()
                 case HandRank.FULL_HOUSE:
                     outs_by_rank[hand_rank] = self.get_full_house_outs()
                 case HandRank.FLUSH:
@@ -83,8 +84,7 @@ class CalcOuts:
                 case HandRank.STRAIGHT:
                     outs_by_rank[hand_rank] = self.get_straight_outs()
                 case HandRank.THREE_OF_A_KIND:
-                    outs_by_rank[hand_rank] = self.get_three_of_a_kind_outs(
-                    )
+                    outs_by_rank[hand_rank] = self.get_three_of_a_kind_outs()
                 case HandRank.TWO_PAIR:
                     outs_by_rank[hand_rank] = self.get_two_pair_outs()
                 case HandRank.ONE_PAIR:
