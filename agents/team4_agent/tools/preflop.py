@@ -1,223 +1,42 @@
-"""
-プレフロップでの勝率計算ツール
-
-このモジュールは、ポーカーのプレフロップ（最初の2枚のカード）での勝率を計算します。
-starting_hand_datasetからデータを読み取り、指定されたハンドとプレイヤー数に対する勝率を返します。
-"""
-
-import ast
-from typing import Any, Dict, Optional, Tuple
+RANK_ORDER = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
+from .starting_hand_dataset import STARTING_HAND_DATASET
 
 
-def load_starting_hand_dataset() -> Dict[Tuple[str, str, str, int], float]:
+def preflop(your_cards: list[str], players: list[dict]) -> float:
     """
-    スターティングハンドデータセットを読み込みます。
-
-    Returns:
-            Dict[Tuple[str, str, str, int], float]: ハンド情報をタプルキーとし、勝率を値とする辞書
-    """
-    try:
-        with open("starting_hand_dataset.py", "r", encoding="utf-8") as file:
-            content = file.read()
-
-        # コメントとdocstringを除去
-        lines = content.split("\n")
-        data_lines = []
-        in_data = False
-
-        for line in lines:
-            line = line.strip()
-            if line.startswith("STARTING_HAND_DATASET"):
-                in_data = True
-            if in_data:
-                if line.startswith("(") and line.endswith("):"):
-                    data_lines.append(line)
-                elif line.startswith("(") and ":" in line:
-                    data_lines.append(line)
-
-        # データを結合して辞書として解析
-        data_str = "{\n" + "\n".join(data_lines) + "\n}"
-
-        # 辞書として解析
-        dataset = ast.literal_eval(data_str)
-        return dataset
-
-    except Exception as e:
-        print(f"データセットの読み込みエラー: {e}")
-        return {}
-
-
-def parse_hand_input(hand_input: str) -> Optional[Tuple[str, str, str]]:
-    """
-    ハンド入力を解析して、first_val, second_val, suit_typeを抽出します。
-
+    Placeholder function for preflop tool.
+    Given the player's hole cards, this function will check the winning probability of the starting hand from starting_hand_dataset.
+    引数を整形してSTARTING_HAND_DATASETからスターティングハンドの勝率を取得します。
     Args:
-        hand_input (str): ハンドの入力文字列（例: "AKs", "QJo", "TT"）
-
+        your_cards: The player's hole cards.
+        example: ["A♥", "K♠"]
+        players: The list of players at the table.
     Returns:
-        Optional[Tuple[str, str, str]]: (first_val, second_val, suit_type)のタプル、解析できない場合はNone
-
-    Examples:
-        >>> parse_hand_input("AKs")
-        ('A', 'K', 'suited')
-        >>> parse_hand_input("QJo")
-        ('Q', 'J', 'offsuit')
-        >>> parse_hand_input("TT")
-        ('T', 'T', 'pair')
+        The winning probability of the starting hand.
     """
-    hand_input = hand_input.upper().strip()
-
-    if len(hand_input) < 2:
-        return None
-
-    first_val = hand_input[0]
-    second_val = hand_input[1]
+    # 2枚のカードのランクとスートを分解
+    rank1, suit1 = your_cards[0][:-1], your_cards[0][-1]
+    rank2, suit2 = your_cards[1][:-1], your_cards[1][-1]
+    print(rank1, suit1, rank2, suit2)
+    num_players = len(players)
 
     # ペアの場合
-    if first_val == second_val:
-        return (first_val, second_val, "pair")
+    if rank1 == rank2:
+        return STARTING_HAND_DATASET[(rank1, rank2, "pair", num_players)]
 
-    # スート指定がある場合
-    if len(hand_input) > 2:
-        suit_indicator = hand_input[2]
-        if suit_indicator == "s":
-            return (first_val, second_val, "suited")
-        elif suit_indicator == "o":
-            return (first_val, second_val, "offsuit")
-
-    # デフォルトはoffsuit
-    return (first_val, second_val, "offsuit")
-
-
-def calculate_win_rate(
-    hand_input: str, num_players: int, dataset: Dict[Tuple[str, str, str, int], float]
-) -> Optional[float]:
-    """
-    指定されたハンドとプレイヤー数での勝率を計算します。
-
-    Args:
-            hand_input (str): ハンドの入力文字列（例: "AKs", "QJo", "TT"）
-            num_players (int): プレイヤー数（2-9）
-            dataset (Dict[Tuple[str, str, str, int], float]): スターティングハンドデータセット
-
-    Returns:
-            Optional[float]: 勝率（0.0-1.0）、見つからない場合はNone
-    """
-    # ハンド入力を解析
-    parsed = parse_hand_input(hand_input)
-    if not parsed:
-        return None
-
-    first_val, second_val, suit_type = parsed
-
-    # データセットから該当するエントリを検索
-    for key, value in dataset.items():
-        if (
-            key[0] == first_val
-            and key[1] == second_val
-            and key[2] == suit_type
-            and key[3] == num_players
-        ):
-            return value
-
-    # 完全一致が見つからない場合、suit_typeを"any"で検索
-    if suit_type in ["suited", "offsuit"]:
-        for key, value in dataset.items():
-            if (
-                key[0] == first_val
-                and key[1] == second_val
-                and key[2] == "any"
-                and key[3] == num_players
-            ):
-                return value
-
-    return None
-
-
-def get_hand_recommendation(win_rate: float) -> str:
-    """
-    勝率に基づいてハンドの推奨アクションを返します。
-
-    Args:
-        win_rate (float): 勝率（0.0-1.0）
-
-    Returns:
-        str: 推奨アクション
-    """
-    if win_rate >= 0.7:
-        return "強く推奨 (Raise/Reraise)"
-    elif win_rate >= 0.6:
-        return "推奨 (Raise/Call)"
-    elif win_rate >= 0.5:
-        return "状況次第 (Call/Fold)"
-    elif win_rate >= 0.4:
-        return "慎重に (Call/Fold)"
+    # ポーカーの強さ順で並べる
+    if RANK_ORDER.index(rank1) < RANK_ORDER.index(rank2):
+        ranks = (rank1, rank2)
     else:
-        return "推奨しない (Fold)"
+        ranks = (rank2, rank1)
 
-
-def main():
-    """
-    メイン関数：ユーザー入力を受け取り、勝率を計算して表示します。
-    """
-    print("ポーカープレフロップ勝率計算ツール")
-    print("=" * 40)
-
-    # データセットを読み込み
-    dataset: Dict[Tuple[str, str, str, int], float] = load_starting_hand_dataset()
-    if not dataset:
-        print("エラー: データセットの読み込みに失敗しました。")
-        return
-
-    print(f"データセット読み込み完了: {len(dataset)}件のエントリ")
-    print()
-
-    while True:
-        try:
-            # ユーザー入力を受け取り
-            hand_input = input("ハンドを入力してください（例: AKs, QJo, TT）: ").strip()
-            if hand_input.lower() in ["quit", "exit", "q"]:
-                break
-
-            if not hand_input:
-                continue
-
-            num_players_input = input("プレイヤー数を入力してください（2-9）: ").strip()
-            if num_players_input.lower() in ["quit", "exit", "q"]:
-                break
-
-            try:
-                num_players = int(num_players_input)
-                if num_players < 2 or num_players > 9:
-                    print("プレイヤー数は2-9の範囲で入力してください。")
-                    continue
-            except ValueError:
-                print("プレイヤー数は数値で入力してください。")
-                continue
-
-            # 勝率を計算
-            win_rate = calculate_win_rate(hand_input, num_players, dataset)
-
-            if win_rate is not None:
-                print(f"\n結果:")
-                print(f"ハンド: {hand_input}")
-                print(f"プレイヤー数: {num_players}")
-                print(f"勝率: {win_rate:.3f} ({win_rate*100:.1f}%)")
-                print(f"推奨: {get_hand_recommendation(win_rate)}")
-            else:
-                print(
-                    f"\nエラー: ハンド '{hand_input}' とプレイヤー数 {num_players} の組み合わせが見つかりません。"
-                )
-                print("有効なハンド例: AKs, QJo, TT, 72o")
-
-            print("\n" + "-" * 40)
-
-        except KeyboardInterrupt:
-            print("\n\nプログラムを終了します。")
-            break
-        except Exception as e:
-            print(f"エラーが発生しました: {e}")
-
-
-if __name__ == "__main__":
-    main()
+    # スーテッド or オフスート or combined/any
+    suit_type = "suited" if suit1 == suit2 else "offsuit"
+    for key_type in [suit_type, "combined", "any"]:
+        key = (ranks[0], ranks[1], key_type, num_players)
+        if key in STARTING_HAND_DATASET:
+            return STARTING_HAND_DATASET[key]
+    # 万一該当がなければKeyErrorを投げる
+    raise KeyError(
+        f"No winrate found for {ranks[0]}, {ranks[1]}, {suit_type}, {num_players}"
+    )
