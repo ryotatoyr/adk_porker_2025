@@ -1,7 +1,7 @@
 from google.adk.agents import Agent, ParallelAgent, SequentialAgent
 
-from .agents.action import action_agent
-from .agents.exploit import exploit_agent
+from .agents.action import *
+from .agents.exploit import *
 
 # from .agents.flop import flop_agent
 from .agents.preflop import preflop_agent
@@ -10,25 +10,25 @@ from .agents.river import river_agent
 parallel_preflop_agent = ParallelAgent(
     name="parallel_preflop_agent",
     description="プリフロップフェーズの手札と相手を並行に分析するエージェント",
-    sub_agents=[preflop_agent, exploit_agent],
+    sub_agents=[preflop_agent, preflop_exploit_agent],
 )
 
 preflop_pipeline_agent = SequentialAgent(
     name="preflop_pipeline_agent",
     description="プリフロップフェーズを分析し、行動を決定するエージェント",
-    sub_agents=[parallel_preflop_agent, action_agent],
+    sub_agents=[parallel_preflop_agent, preflop_action_agent],
 )
 
 parallel_river_agent = ParallelAgent(
     name="parallel_river_agent",
     description="リバーフェーズの手札と相手を並行に分析するエージェント",
-    sub_agents=[river_agent, exploit_agent],
+    sub_agents=[river_agent, river_exploit_agent],
 )
 
 river_pipeline_agent = SequentialAgent(
     name="river_pipeline_agent",
     description="リバーフェーズを分析し、行動を決定するエージェント",
-    sub_agents=[parallel_river_agent, action_agent],
+    sub_agents=[parallel_river_agent, river_action_agent],
 )
 
 root_agent = Agent(

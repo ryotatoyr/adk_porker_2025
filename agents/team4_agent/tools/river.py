@@ -118,7 +118,7 @@ def river(your_cards: list[str], community: list[str]) -> float:
 riverのinput例
 {
   "your_id": 0,
-  "phase": "turn",
+  "phase": "river",
   "your_cards": ["A♥", "K♠"],
   "community": ["Q♥", "J♦", "10♣", "9♠", "6♦"],
   "your_chips": 950,
