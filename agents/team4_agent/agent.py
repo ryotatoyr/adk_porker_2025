@@ -1,23 +1,62 @@
+# import os
+
+# os.environ["OTEL_SDK_DISABLED"] = "true"
 from google.adk.agents import Agent, ParallelAgent, SequentialAgent
 
-from .agents.action import action_agent
-from .agents.exploit import exploit_agent
-
-# from .agents.flop import flop_agent
+from .agents.action import *
+from .agents.exploit import *
+from .agents.flop import flop_agent
 from .agents.preflop import preflop_agent
+from .agents.river import river_agent
+from .agents.turn import turn_agent
 
 parallel_preflop_agent = ParallelAgent(
     name="parallel_preflop_agent",
     description="プリフロップフェーズの手札と相手を並行に分析するエージェント",
-    sub_agents=[preflop_agent, exploit_agent],
+    sub_agents=[preflop_agent, preflop_exploit_agent],
 )
 
 preflop_pipeline_agent = SequentialAgent(
     name="preflop_pipeline_agent",
     description="プリフロップフェーズを分析し、行動を決定するエージェント",
-    sub_agents=[parallel_preflop_agent, action_agent],
+    sub_agents=[parallel_preflop_agent, preflop_action_agent],
 )
 
+parallel_flop_agent = ParallelAgent(
+    name="parallel_flop_agent",
+    description="フロップフェーズの手札と相手を並行に分析するエージェント",
+    sub_agents=[flop_agent, flop_exploit_agent],
+)
+
+flop_pipeline_agent = SequentialAgent(
+    name="flop_pipeline_agent",
+    description="フロップフェーズを分析し、行動を決定するエージェント",
+    sub_agents=[parallel_flop_agent, flop_action_agent],
+)
+
+parallel_turn_agent = ParallelAgent(
+    name="parallel_turn_agent",
+    description="ターンフェーズの手札と相手を並行に分析するエージェント",
+    sub_agents=[turn_agent, turn_exploit_agent],
+)
+
+turn_pipeline_agent = SequentialAgent(
+    name="turn_pipeline_agent",
+    description="ターンフェーズを分析し、行動を決定するエージェント",
+    sub_agents=[parallel_turn_agent, turn_action_agent],
+)
+
+parallel_river_agent = ParallelAgent(
+    name="parallel_river_agent",
+    description="リバーフェーズの手札と相手を並行に分析するエージェント",
+    sub_agents=[river_agent, river_exploit_agent],
+)
+
+river_pipeline_agent = SequentialAgent(
+    name="river_pipeline_agent",
+    description="リバーフェーズを分析し、行動を決定するエージェント",
+    sub_agents=[parallel_river_agent, river_action_agent],
+)
 
 root_agent = Agent(
     name="professional_poker_agent",
@@ -53,8 +92,8 @@ phaseに応じて、以下のエージェントを呼び出して情報を与え
 """,
     sub_agents=[
         preflop_pipeline_agent,
-        # flop_pipeline_agent,
-        # turn_pipeline_agent,
-        # river_pipeline_agent,
+        flop_pipeline_agent,
+        turn_pipeline_agent,
+        river_pipeline_agent,
     ],
 )

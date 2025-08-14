@@ -1,15 +1,15 @@
 from google.adk.agents import Agent
 
-from ..tools.preflop import preflop
+from ..tools.river import river
 
-preflop_agent = Agent(
-    name="preflop_agent",
+river_agent = Agent(
+    name="river_agent",
     model="gemini-2.5-flash-lite",
-    description="プリフロップフェーズに特化したエージェント",
+    description="リバーフェーズに特化したエージェント",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
-あなたのタスクは、プリフロップフェーズにおいてスターティングハンドの勝率を計算することです。
-toolのpreflopを使用してスターティングハンドの勝率を計算してください。
+あなたのタスクは、リバーフェーズにおいて自身の持つ手札が上位何パーセントにいるのかを計算することです。
+toolのriverを使用して現在の状況で自身の持つ手札が上位何パーセントにいるのかを計算してください。
 
 あなたには以下の情報が与えられます:
 - **your_id**: あなたのプレイヤーID
@@ -26,7 +26,7 @@ toolのpreflopを使用してスターティングハンドの勝率を計算し
 - **players**: 他プレイヤーの状態（chips + bet = 2000になるように整合性を保つ）
 - **actions**: 利用可能なアクション一覧
 - **history**: 直近のアクション履歴（最新20件。ベット額とチップの整合性を保つ）
-上記の情報に加えて**preflop**としてスターティングハンドの勝率もaction agentに渡してください:
+上記の情報に加えて**river**としてこの時点でのコミュニティーカードとプレイヤーの手札でできる役が客観的にどのくらい強いのかもaction agentに渡してください:
 """,
-    tools=[preflop],
+    tools=[river],
 )
