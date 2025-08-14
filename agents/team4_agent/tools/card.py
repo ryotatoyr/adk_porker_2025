@@ -1,5 +1,5 @@
-from .poker.game_models import Card
 from .poker.evaluator import HandEvaluator
+from .poker.game_models import Card
 
 RANK = {name: rank for rank, name in Card.RANK_NAMES.items()}
 SUIT = {symbol: suit for suit, symbol in Card.SUIT_SYMBOLS.items()}
