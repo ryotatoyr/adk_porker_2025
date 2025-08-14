@@ -26,7 +26,7 @@ def rank_to_value(rank: str):
         "K": 13,
         "Q": 12,
         "J": 11,
-        "T": 10,
+        "10": 10,
         "9": 9,
         "8": 8,
         "7": 7,
@@ -100,17 +100,37 @@ def river(your_cards: list[str], community: list[str]) -> float:
     Returns:
         float: 7枚から作れる全ての5枚役の中で自分の役が上位何割に入るか（1.0=最強, 0.0=最弱）
     """
+    # 1. 自分の役
     all_cards = your_cards + community
     card_tuples = [card_to_tuple(c) for c in all_cards]
-    all_hands = list(combinations(card_tuples, 5))
-    hand_scores = [evaluate_hand(hand) for hand in all_hands]
-    # 自分の役（自分の2枚＋コミュニティ5枚から最強の5枚）
     my_best = max([evaluate_hand(hand) for hand in combinations(card_tuples, 5)])
-    # 全役を強い順にソート
-    sorted_scores = sorted(hand_scores, reverse=True)
-    # 自分の役が全体の上位何番目か
-    my_rank = sorted_scores.index(my_best) + 1
-    percentile = 1 - (my_rank - 1) / len(sorted_scores)
+
+    # 2. 残りデッキから相手の手札候補を生成
+    all_ranks = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"]
+    all_suits = ["♥", "♦", "♠", "♣"]
+    # すべてのカード
+    all_deck = set(f"{r}{s}" for r in all_ranks for s in all_suits)
+    used = set(your_cards + community)
+    remain = list(all_deck - used)
+
+    # 相手の手札の全組み合わせ
+    opp_hands = [
+        (remain[i], remain[j])
+        for i in range(len(remain))
+        for j in range(len(remain))
+        if i != j
+    ]
+
+    # 3. 自分より強い役の数をカウント
+    stronger = 0
+    for opp in opp_hands:
+        opp_all = list(opp) + community
+        opp_tuples = [card_to_tuple(c) for c in opp_all]
+        opp_best = max([evaluate_hand(hand) for hand in combinations(opp_tuples, 5)])
+        if opp_best > my_best:
+            stronger += 1
+
+    percentile = 1 - stronger / len(opp_hands)
     return percentile
 
 
@@ -120,7 +140,7 @@ riverのinput例
   "your_id": 0,
   "phase": "river",
   "your_cards": ["A♥", "K♠"],
-  "community": ["Q♥", "J♦", "10♣", "9♠", "6♦"],
+  "community": ["Q♦", "J♦", "10♦", "9♠", "6♦"],
   "your_chips": 950,
   "your_bet_this_round": 0,
   "your_total_bet_this_hand": 50,
@@ -140,3 +160,26 @@ riverのinput例
   ]
 }
 """
+if __name__ == "__main__":
+    # テストケース例
+    test_cases = [
+        {
+            "your_cards": ["A♥", "K♠"],
+            "community": ["Q♦", "J♦", "10♦", "9♠", "6♦"],
+        },
+        {
+            "your_cards": ["2♣", "3♣"],
+            "community": ["4♣", "5♣", "6♦", "7♣", "8♦"],
+        },
+        {
+            "your_cards": ["A♠", "A♦"],
+            "community": ["A♣", "A♥", "K♠", "K♦", "2♠"],
+        },
+    ]
+    for i, case in enumerate(test_cases):
+        print(f"Test case {i+1}:")
+        print(f"  your_cards: {case['your_cards']}")
+        print(f"  community: {case['community']}")
+        result = river(case["your_cards"], case["community"])
+        print(f"  percentile: {result}")
+        print()
