@@ -1,3 +1,6 @@
+# import os
+
+# os.environ["OTEL_SDK_DISABLED"] = "true"
 from google.adk.agents import Agent, ParallelAgent, SequentialAgent
 
 from .agents.action import *
