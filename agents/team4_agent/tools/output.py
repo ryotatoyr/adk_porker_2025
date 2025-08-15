@@ -18,11 +18,15 @@ def json_output(action: str, amount: int, reasoning: str) -> str:
     output_json = {"amount": amount, "reasoning": reasoning}
     if "check" in action:
         output_json["action"] = "check"
+        output_json["amount"] = 0
     elif "call" in action:
         output_json["action"] = "call"
     elif "raise" in action:
         output_json["action"] = "raise"
     elif "all_in" in action:
         output_json["action"] = "all_in"
+    else:
+        output_json["action"] = "fold"
+        output_json["amount"] = 0
 
     return json.dumps(output_json)
