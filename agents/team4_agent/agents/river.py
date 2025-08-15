@@ -1,6 +1,7 @@
 from google.adk.agents import Agent
 
 from ..tools.river import river
+from ..tools.card import get_hand_rank
 from .model import AGENT_MODEL
 
 river_agent = Agent(
@@ -9,8 +10,10 @@ river_agent = Agent(
     description="リバーフェーズに特化したエージェント",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
-あなたのタスクは、リバーフェーズにおいて自身の持つ手札が上位何パーセントにいるのかを計算することです。
-toolのriverを使用して現在の状況で自身の持つ手札が上位何パーセントにいるのかを計算してください。
+あなたのタスクは、リバーフェーズにおいて自身の持つ手札が何パーセンタイルにいるのかを計算することです。
+まず、自身のハンドのランクを、get_hand_rank toolを使用して計算してください。
+次に、toolのriverを使用して現在の状況で自身の持つ手札が何パーセンタイルにいるのかを計算してください。
+
 
 あなたには以下の情報が与えられます:
 - **your_id**: あなたのプレイヤーID
@@ -29,5 +32,5 @@ toolのriverを使用して現在の状況で自身の持つ手札が上位何�
 - **history**: 直近のアクション履歴（最新20件。ベット額とチップの整合性を保つ）
 上記の情報に加えて**river**としてこの時点でのコミュニティーカードとプレイヤーの手札でできる役が客観的にどのくらい強いのかもaction agentに渡してください:
 """,
-    tools=[river],
+    tools=[river, get_hand_rank],
 )
