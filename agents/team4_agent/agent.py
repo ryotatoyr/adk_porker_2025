@@ -1,5 +1,5 @@
 from google.adk.agents import Agent, ParallelAgent, SequentialAgent
-from google.adk.models.litellm import LiteLlm
+from google.adk.models.lite_llm import LiteLlm
 
 from .agents.action import *
 from .agents.exploit import *

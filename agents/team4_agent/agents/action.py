@@ -1,7 +1,6 @@
-from google.adk.agents import 
+from google.adk.agents import Agent
 
 from ..agent import AGENT_MODEL
-
 from ..tools.odds import get_pot_odds
 
 preflop_action_agent = Agent(
@@ -118,7 +117,7 @@ flop_action_agent = Agent(
 - "all_in"の場合: あなたの残りチップ全額を指定してください
 
 初心者がわかるように専門用語には解説を加えてください""",
-    tools=[get_pot_odds]
+    tools=[get_pot_odds],
 )
 
 turn_action_agent = Agent(
@@ -191,7 +190,7 @@ turn_action_agent = Agent(
 - "all_in"の場合: あなたの残りチップ全額を指定してください
 
 初心者がわかるように専門用語には解説を加えてください""",
-    tools=[get_pot_odds]
+    tools=[get_pot_odds],
 )
 
 river_action_agent = Agent(
