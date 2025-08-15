@@ -1,6 +1,6 @@
 from google.adk.agents import Agent
 
-from ..tools.card import get_hand_rank
+from ..tools.card import get_community_rank, get_hand_rank
 from ..tools.outs import get_outs_info
 
 turn_agent = Agent(
@@ -15,8 +15,9 @@ turn_agent = Agent(
     "- あなたの2枚の手札"
     "- 4枚の場のカード"
     "以下の手順に従って正確に出力してください。順序を遵守し、データを改変してはいけません。"
-    "1. 最初にtool `get_hand_rank`を使用して現在の状況で完成している役の名前を出力してください。"
-    "2. tool `get_outs_info`を使用してそれよりも強い役それぞれについて、次の要素を箇条書きとで出力してください。 "
+    "1. tool `get_hand_rank`を使用して現在の状況で完成している役の名前を出力してください。"
+    "2. tool `get_community_rank`を使用して場のカードのみで完成している役を出力してください。該当する役がない場合はないことを明示してください。"
+    "3. tool `get_outs_info`を使用してそれよりも強い役それぞれについて、次の要素を箇条書きとで出力してください。 "
     "対象の役の名前, outs数, ドローで引く確率, outsとなるカードのリスト(`rank suit'の表記方法)"
     "役の名前は強い順に以下に示します。"
     "1. ROYAL_FLUSH"
@@ -29,5 +30,5 @@ turn_agent = Agent(
     "8. TWO_PAIR"
     "9. ONE_PAIR"
     "10. HIGH_CARD",
-    tools=[get_hand_rank, get_outs_info],
+    tools=[get_hand_rank, get_community_rank, get_outs_info],
 )
