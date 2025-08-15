@@ -163,17 +163,25 @@ riverのinput例
 if __name__ == "__main__":
     # テストケース例
     test_cases = [
+        # 強い手
         {
             "your_cards": ["A♥", "K♠"],
             "community": ["Q♦", "J♦", "10♦", "9♠", "6♦"],
         },
+        # フラッシュ
         {
             "your_cards": ["2♣", "3♣"],
-            "community": ["4♣", "5♣", "6♦", "7♣", "8♦"],
+            "community": ["4♣", "5♣", "6♣", "7♣", "8♣"],
         },
+        # フォーカード
         {
             "your_cards": ["A♠", "A♦"],
             "community": ["A♣", "A♥", "K♠", "K♦", "2♠"],
+        },
+        # 激弱な手（ハイカードのみ）
+        {
+            "your_cards": ["2♣", "7♦"],
+            "community": ["9♠", "J♥", "4♦", "8♣", "Q♠"],
         },
     ]
     for i, case in enumerate(test_cases):
