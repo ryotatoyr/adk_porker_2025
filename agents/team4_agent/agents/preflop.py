@@ -1,10 +1,11 @@
 from google.adk.agents import Agent
 
+from ..agent import AGENT_MODEL
 from ..tools.preflop import preflop
 
 preflop_agent = Agent(
     name="preflop_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="プリフロップフェーズに特化したエージェント",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 

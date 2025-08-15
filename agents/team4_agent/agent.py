@@ -1,7 +1,5 @@
-# import os
-
-# os.environ["OTEL_SDK_DISABLED"] = "true"
 from google.adk.agents import Agent, ParallelAgent, SequentialAgent
+from google.adk.models.litellm import LiteLlm
 
 from .agents.action import *
 from .agents.exploit import *
@@ -9,6 +7,10 @@ from .agents.flop import flop_agent
 from .agents.preflop import preflop_agent
 from .agents.river import river_agent
 from .agents.turn import turn_agent
+
+gemini_model = "gemini-2.5-flash-lite"
+openai_model = LiteLlm(model="openai/gpt-4o-mini")
+AGENT_MODEL = openai_model
 
 parallel_preflop_agent = ParallelAgent(
     name="parallel_preflop_agent",
@@ -60,7 +62,7 @@ river_pipeline_agent = SequentialAgent(
 
 root_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="ツールを利用してテキサスホールデム・ポーカーの戦略的な意思決定の情報を収集するエージェント",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
