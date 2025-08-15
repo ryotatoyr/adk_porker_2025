@@ -2,10 +2,11 @@ from google.adk.agents import Agent
 
 from ..tools.card import get_community_rank, get_hand_rank
 from ..tools.outs import get_outs_info
+from .model import AGENT_MODEL
 
 turn_agent = Agent(
     name="turn_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="テキサスホールデム・ポーカーの状況からouts数とそれを引く確率を求める",
     instruction="あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。"
     "現在はturn phaseであり、手札2枚と場のカード4枚が確認できます。"

@@ -1,10 +1,11 @@
 from google.adk.agents import Agent
 
 from ..tools.odds import get_pot_odds
+from .model import AGENT_MODEL
 
 preflop_action_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="戦略的な意思決定を行うテキサスホールデム・ポーカープレイヤー",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
@@ -43,12 +44,15 @@ preflop_action_agent = Agent(
 - "raise"の場合: レイズ後の合計金額を指定してください
 - "all_in"の場合: あなたの残りチップ全額を指定してください
 
+リンプはポーカー用語で、プリフロップ（最初のカードが配られた後）で、レイズせずにコールすること、または最初にベットせずに参加することを指します。
+リンプは一般的にあまり推奨される戦略ではありません。避けたほうがいい場合にはリンプしないでください。
+
 初心者がわかるように専門用語には解説を加えてください""",
 )
 
 flop_action_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="戦略的な意思決定を行うテキサスホールデム・ポーカープレイヤー",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
@@ -102,6 +106,9 @@ flop_action_agent = Agent(
 - `HIGH_CARD`は非常に価値が低いため、outsを引く確率が高くてもチップを賭けてのcallは推奨されません。
 - 必要でないときや、カードに価値を見いだせないときに勝負を仕掛けないようにして、最大限`堅実なプレイ`を心がけてください。
 
+また、これまでのエージェントがphaseに応じて計算した情報と、historyに応じて分析した相手の情報
+も考慮に入れてください。
+
 必ず次のJSON形式で回答し他の出力は絶対に一切しないでください:
 {
   "action": "fold|check|call|raise|all_in",
@@ -115,13 +122,14 @@ flop_action_agent = Agent(
 - "raise"の場合: レイズ後の合計金額を指定してください
 - "all_in"の場合: あなたの残りチップ全額を指定してください
 
+
 初心者がわかるように専門用語には解説を加えてください""",
-    tools=[get_pot_odds]
+    tools=[get_pot_odds],
 )
 
 turn_action_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="戦略的な意思決定を行うテキサスホールデム・ポーカープレイヤー",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
@@ -175,6 +183,9 @@ turn_action_agent = Agent(
 - `HIGH_CARD`は非常に価値が低いため、outsを引く確率が高くてもチップを賭けてのcallは推奨されません。
 - 必要でないときや、カードに価値を見いだせないときに勝負を仕掛けないようにして、最大限`堅実なプレイ`を心がけてください。
 
+また、これまでのエージェントがphaseに応じて計算した情報と、historyに応じて分析した相手の情報
+も考慮に入れてください。
+
 必ず次のJSON形式で回答し他の出力は絶対に一切しないでください:
 {
   "action": "fold|check|call|raise|all_in",
@@ -189,12 +200,12 @@ turn_action_agent = Agent(
 - "all_in"の場合: あなたの残りチップ全額を指定してください
 
 初心者がわかるように専門用語には解説を加えてください""",
-    tools=[get_pot_odds]
+    tools=[get_pot_odds],
 )
 
 river_action_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="戦略的な意思決定を行うテキサスホールデム・ポーカープレイヤー",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 

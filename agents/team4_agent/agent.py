@@ -1,11 +1,10 @@
-# import os
-
-# os.environ["OTEL_SDK_DISABLED"] = "true"
 from google.adk.agents import Agent, ParallelAgent, SequentialAgent
+from google.adk.models.lite_llm import LiteLlm
 
 from .agents.action import *
 from .agents.exploit import *
 from .agents.flop import flop_agent
+from .agents.model import AGENT_MODEL
 from .agents.preflop import preflop_agent
 from .agents.river import river_agent
 from .agents.turn import turn_agent
@@ -60,7 +59,7 @@ river_pipeline_agent = SequentialAgent(
 
 root_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="ツールを利用してテキサスホールデム・ポーカーの戦略的な意思決定の情報を収集するエージェント",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
