@@ -1,6 +1,7 @@
 from google.adk.agents import Agent
 
 from ..tools.odds import get_pot_odds
+from ..tools.output import json_output
 from .model import AGENT_MODEL
 
 preflop_action_agent = Agent(
@@ -36,7 +37,7 @@ preflop_action_agent = Agent(
 リンプはポーカー用語で、プリフロップ（最初のカードが配られた後）で、レイズせずにコールすること、または最初にベットせずに参加することを指します。
 リンプは一般的にあまり推奨される戦略ではありません。避けたほうがいい場合にはリンプしないでください。
 
-必ず次のJSON形式で回答してください:
+tool`json_output`を使用して必ず次のJSON形式で回答し他の出力は絶対に一切しないでください:
 "action"にはfold|check|call|raise|all_inの選択肢だけを指定してください。額を指定する必要がある場合はamountに指定してください。
 {
   "action": "fold|check|call|raise|all_in",
@@ -51,6 +52,7 @@ preflop_action_agent = Agent(
 - "all_in"の場合: あなたの残りチップ全額を指定してください
 
 初心者がわかるように専門用語には解説を加えてください""",
+    tools=[json_output]
 )
 
 flop_action_agent = Agent(
@@ -119,7 +121,7 @@ flop_action_agent = Agent(
 - `行動のメリハリ`を重要視にしてください。手札が強く、勝負どころだと判断した場合は強気、アグレッシブに行動してください。
 - 現在揃っている役と、ゲームの展開によって揃う可能性のある役はしっかり区別してアクションを選択してください。
 
-必ず次のJSON形式で回答してください:
+tool`json_output`を使用して必ず次のJSON形式で回答し他の出力は絶対に一切しないでください:
 "action"にはfold|check|call|raise|all_inの選択肢だけを指定してください。額を指定する必要がある場合はamountに指定してください。
 {
   "action": "fold|check|call|raise|all_in",
@@ -136,7 +138,7 @@ flop_action_agent = Agent(
 
 
 初心者がわかるように専門用語には解説を加えてください""",
-    tools=[get_pot_odds],
+    tools=[get_pot_odds, json_output],
 )
 
 turn_action_agent = Agent(
@@ -205,7 +207,7 @@ turn_action_agent = Agent(
 - `行動のメリハリ`を重要視にしてください。手札が強く、勝負どころだと判断した場合は強気、アグレッシブに行動してください。
 - 現在揃っている役と、ゲームの展開によって揃う可能性のある役はしっかり区別してアクションを選択してください。
 
-必ず次のJSON形式で回答してください:
+tool`json_output`を使用して必ず次のJSON形式で回答し他の出力は絶対に一切しないでください:
 "action"にはfold|check|call|raise|all_inの選択肢だけを指定してください。額を指定する必要がある場合はamountに指定してください。
 {
   "action": "fold|check|call|raise|all_in",
@@ -221,7 +223,7 @@ turn_action_agent = Agent(
 - "all_in"の場合: あなたの残りチップ全額を指定してください
 
 初心者がわかるように専門用語には解説を加えてください""",
-    tools=[get_pot_odds],
+    tools=[get_pot_odds, json_output],
 )
 
 river_action_agent = Agent(
@@ -273,7 +275,7 @@ river_agentには以下の指示を与えています。
 
 riverの場合は、コミュニティカードが5枚になることに注意してください。
 
-必ず次のJSON形式で回答してください:
+tool`json_output`を使用して必ず次のJSON形式で回答し他の出力は絶対に一切しないでください:
 "action"にはfold|check|call|raise|all_inの選択肢だけを指定してください。額を指定する必要がある場合はamountに指定してください。
 {
   "action": "fold|check|call|raise|all_in",
@@ -288,4 +290,5 @@ riverの場合は、コミュニティカードが5枚になることに注意�
 - "all_in"の場合: あなたの残りチップ全額を指定してください
 
 初心者がわかるように専門用語には解説を加えてください""",
+    tools=[json_output]
 )
