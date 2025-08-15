@@ -4,6 +4,7 @@ from google.adk.models.lite_llm import LiteLlm
 from .agents.action import *
 from .agents.exploit import *
 from .agents.flop import flop_agent
+from .agents.model import AGENT_MODEL
 from .agents.preflop import preflop_agent
 from .agents.river import river_agent
 from .agents.turn import turn_agent

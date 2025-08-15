@@ -2,6 +2,7 @@ from google.adk.agents import Agent
 
 from ..agent import AGENT_MODEL
 from ..tools.preflop import preflop
+from .model import AGENT_MODEL
 
 preflop_agent = Agent(
     name="preflop_agent",

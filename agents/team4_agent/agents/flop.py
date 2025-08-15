@@ -3,6 +3,7 @@ from google.adk.agents import Agent
 from ..agent import AGENT_MODEL
 from ..tools.card import get_hand_rank
 from ..tools.outs import get_outs_info
+from .model import AGENT_MODEL
 
 flop_agent = Agent(
     name="flop_agent",

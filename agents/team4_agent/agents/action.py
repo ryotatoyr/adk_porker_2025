@@ -2,6 +2,7 @@ from google.adk.agents import Agent
 
 from ..agent import AGENT_MODEL
 from ..tools.odds import get_pot_odds
+from .model import AGENT_MODEL
 
 preflop_action_agent = Agent(
     name="professional_poker_agent",

@@ -2,6 +2,7 @@ from google.adk.agents import Agent
 
 from ..agent import AGENT_MODEL
 from ..tools.river import river
+from .model import AGENT_MODEL
 
 river_agent = Agent(
     name="river_agent",
