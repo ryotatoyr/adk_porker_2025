@@ -1,6 +1,5 @@
 from google.adk.agents import Agent
 
-from ..agent import AGENT_MODEL
 from ..tools.odds import get_pot_odds
 from .model import AGENT_MODEL
 

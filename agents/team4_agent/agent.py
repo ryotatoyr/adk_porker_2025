@@ -9,10 +9,6 @@ from .agents.preflop import preflop_agent
 from .agents.river import river_agent
 from .agents.turn import turn_agent
 
-gemini_model = "gemini-2.5-flash-lite"
-openai_model = LiteLlm(model="openai/gpt-4o-mini")
-AGENT_MODEL = openai_model
-
 parallel_preflop_agent = ParallelAgent(
     name="parallel_preflop_agent",
     description="プリフロップフェーズの手札と相手を並行に分析するエージェント",
