@@ -1,10 +1,11 @@
 from google.adk.agents import Agent
 
 from ..tools.river import river
+from .model import AGENT_MODEL
 
 river_agent = Agent(
     name="river_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="リバーフェーズに特化したエージェント",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 

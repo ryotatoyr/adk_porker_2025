@@ -1,10 +1,11 @@
 from google.adk.agents import Agent
 
 from ..tools.odds import get_pot_odds
+from .model import AGENT_MODEL
 
 preflop_action_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="戦略的な意思決定を行うテキサスホールデム・ポーカープレイヤー",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
@@ -48,7 +49,7 @@ preflop_action_agent = Agent(
 
 flop_action_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="戦略的な意思決定を行うテキサスホールデム・ポーカープレイヤー",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
@@ -121,7 +122,7 @@ flop_action_agent = Agent(
 
 turn_action_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="戦略的な意思決定を行うテキサスホールデム・ポーカープレイヤー",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
@@ -194,7 +195,7 @@ turn_action_agent = Agent(
 
 river_action_agent = Agent(
     name="professional_poker_agent",
-    model="gemini-2.5-flash-lite",
+    model=AGENT_MODEL,
     description="戦略的な意思決定を行うテキサスホールデム・ポーカープレイヤー",
     instruction="""あなたはテキサスホールデム・ポーカーのエキスパートプレイヤーです。
 
