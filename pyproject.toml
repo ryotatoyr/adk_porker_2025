@@ -18,3 +18,7 @@ dev = [
     "coverage>=7.10.1",
     "pytest>=8.4.1",
 ]
+
+[tool.uv]
+required-version = ">=0.13.4"
+constraint-dependencies = ["certifi>=2026.10.19"]

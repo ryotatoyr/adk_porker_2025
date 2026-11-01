@@ -55,6 +55,33 @@ LLMプレイヤー対応のWebアプリ（Flet）/CLIのテキサスホールデ
    curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
 
+#### WSL/Linux環境のCA更新と再検証
+
+[eMudhraの中間CA問題](https://emudhra.we-have-a-problem.com/)への対策として、
+Requestsが利用するcertifiを2026.10.19以上に制約しています。
+uvもCA対策済みの0.13.4以上が必要です。Ubuntu/WSLではOSのCAも更新し、
+環境を再作成・同期してから検証してください。
+
+```bash
+sudo apt-get update
+sudo apt-get install --only-upgrade ca-certificates openssl
+uv self update
+uv python upgrade
+uv sync --locked
+uv run --locked python scripts/check_tls_trust.py
+```
+
+検証CLIは明示実行した場合だけ正常な公開サイトと問題のDV証明書4経路
+（No CTを含む）へ接続し、標準SSL/certifiの両方を検査します。
+正常接続成功と証明書エラーによる拒否が揃った場合だけ成功します。
+DNS障害・タイムアウト等は判定不能として失敗し、安全とは扱いません。
+8枚すべての中間CA、Windowsの失効確認、他アプリを網羅する検査ではありません。
+古いブランチのlockfileで再同期する前に本変更を取り込んでください。
+共通ライブラリのimport時にSSL設定を変更する処理は追加していません。
+
+APIキーを使わないゲーム本体の検証は `uv run --locked pytest -q tests` で実行できます。
+ルートのLLM/API接続用テストは、別途サービス・資格情報が必要な統合検証です。
+
 #### 環境変数の設定
 
 [.env.example](.env.example)を参考にして.envファイルをリポジトリルートに作成し、各チームに配布しているAPIキーを書き込んでください．
